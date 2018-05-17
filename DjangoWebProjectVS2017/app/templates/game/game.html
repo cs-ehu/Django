@@ -1,0 +1,19 @@
+﻿{% extends "app/layout.html" %}
+{% block content %}
+
+<h2>{{ title }}.</h2>
+<h3>{{ message }}</h3>
+
+{% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <li><a href="{% url 'pregunta' question.id %}">{{ question.question_text }}</a></li>
+    {% endfor %}
+    </ul>   
+{% else %}
+    <p>No questions are available.</p>
+{% endif %}
+
+<a href="{% url 'tema' %}">Elegir otro tema?</a>
+
+{% endblock %}

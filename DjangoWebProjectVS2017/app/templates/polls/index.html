@@ -1,0 +1,40 @@
+﻿{% extends "app/layout.html" %}
+{% block content %}
+
+<h2>{{ title }}.</h2>
+<h3>{{ message }}</h3>
+
+{% if latest_question_list %}
+    <table>
+        <tr>
+            <th>Preguntas</th>
+            <th>Temas</th>
+        </tr>
+        <tr>
+            <td style="padding-right: 20">
+                <ul>
+                {% for question in latest_question_list %}
+                    <li><a href="{% url 'detail' question.id %}">{{ question.question_text }}</a></li>
+                {% endfor %}
+                </ul>
+            </td>
+            <td>
+                <ul>
+                {% for theme in themes %}
+                    <li><a href="{% url 'theme_q' theme %}">{{ theme }}</a></li>
+                {% endfor %}
+                </ul>
+            </td>
+        </tr>
+    </table>
+
+    
+  
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+{% if request.user.is_authenticated %}
+<a href="{% url 'add' %}"><h2>Insertar pregunta</h2></a> 
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,54 @@
+﻿{% extends "app/layout.html" %}
+{% block content %}
+
+<h2>{{ title }}</h2>
+<h3>{{ message }}</h3>
+<p style="visibility : hidden;" id="quest">{{question.id}}</p>
+
+<h3>Pregunta: {{ question.question_text }}</h3>
+{% if error_message %}<p><strong style="color:red;"><b>{{ error_message }}</b></strong></p>{% endif %}
+<form onsubmit="false" method="post">
+{% csrf_token %}
+{% for choice in question.choice_set.all %}
+    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+    &nbsp;
+    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
+{% endfor %}
+    <input type="button" value="Comprobar" onclick="comprobar()" id="boton"/>
+
+</form>
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script type="text/javascript">
+    function comprobar() {
+        data ={
+                'question': $("#quest").text(),
+                'answer': $('input[name=choice]:checked').val()
+        }
+        console.log(data)
+        $.ajax({
+            url: '/ajax/question/',
+            data: data,
+            dataType: 'json',
+            success: function (data) {
+                $('input[name=choice]').attr('disabled', true);
+                $('#boton').attr('disabled',true);
+                if (data.response == 'correct') {
+                    label = $("label[for='" + $('input[name=choice]:checked').attr('id') + "']");
+                    label.css('color', 'green');
+                    label.text(label.text() + " - CORRECTO");
+                } else {
+                    label = $("label[for='" + $('input[name=choice]:checked').attr('id') + "']");
+                    label.css('color', 'red');
+                    label.text(label.text() + " - INCORRECTO... sigue intentándolo");
+                }
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+    }
+</script>
+{% endblock %}
+
+

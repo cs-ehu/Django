@@ -1,0 +1,18 @@
+﻿{% extends "app/layout.html" %}
+{% block content %}
+
+<h2>{{ title }}.</h2>
+<h3>{{ message }}</h3>
+
+{% if themes %}
+    <ul>
+    {% for theme in themes %}
+        <li><a href="{% url 'game' theme %}">{{ theme }}</a></li>
+    {% endfor %}
+    </ul>   
+{% else %}
+    <p>No themes are available.</p>
+{% endif %}
+
+
+{% endblock %}
